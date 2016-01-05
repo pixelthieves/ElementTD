@@ -19,3 +19,11 @@
 
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
+
+# Stan Assets
+ElementTD/Assets/Facebook/
+ElementTD/Assets/Plugins/
+ElementTD/Assets/Extensions/
+ElementTD/Assets/Extensions.meta
+ElementTD/Assets/Facebook.meta
+ElementTD/Assets/Plugins.meta
