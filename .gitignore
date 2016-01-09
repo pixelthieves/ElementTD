@@ -21,9 +21,9 @@
 sysinfo.txt
 
 # Stan Assets
-ElementTD/Assets/Facebook/
-ElementTD/Assets/Plugins/
-ElementTD/Assets/Extensions/
-ElementTD/Assets/Extensions.meta
-ElementTD/Assets/Facebook.meta
-ElementTD/Assets/Plugins.meta
+ElementTD/Assets/Integration/Facebook/
+ElementTD/Assets/Integration/Plugins/
+ElementTD/Assets/Integration/Extensions/
+ElementTD/Assets/Integration/Extensions.meta
+ElementTD/Assets/Integration/Facebook.meta
+ElementTD/Assets/Integration/Plugins.meta
