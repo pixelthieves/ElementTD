@@ -4,6 +4,5 @@ namespace Assets.Scripts
 {
     public class Tower : MonoBehaviour
     {
-         
     }
 }

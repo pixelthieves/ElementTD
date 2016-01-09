@@ -4,14 +4,28 @@ namespace Assets.Scripts
 {
     public class TowerMap : MonoBehaviour
     {
-        public int Width;
-        public int Height;
+        public Map Map;
 
-        private Tower[,] map;
+        private Tower[,] towerMap;
+
+        public int Width
+        {
+            get { return Map.Width; }
+        }
+
+        public int Height
+        {
+            get { return Map.Height; }
+        }
 
         private void Awake()
         {
-            map = new Tower[Width, Height];
+            towerMap = new Tower[Map.Width, Map.Height];
+        }
+
+        public bool IsAvailable(int x, int y)
+        {
+            return Map[x, y] && towerMap[x, y] == null;
         }
     }
 }
