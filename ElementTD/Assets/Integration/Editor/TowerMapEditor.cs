@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Assets.Editor
+namespace Assets.Integration.Editor
 {
     [CustomEditor(typeof (TowerMap))]
     public class TowerMapEditor : UnityEditor.Editor
