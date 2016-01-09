@@ -17,7 +17,7 @@ namespace Assets.Scripts
             rectTransform.SetHeight(TowerMap.Height);
 
             var grid = GetComponent<GridLayoutGroup>();
-            grid.constraint = GridLayoutGroup.Constraint.FixedRowCount;
+            grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
             grid.constraintCount = TowerMap.Width;
 
             var cellSizeX = rectTransform.GetWidth()/TowerMap.Width;
