@@ -35,7 +35,9 @@ namespace Assets.Scripts
                     tile.Y = y;
                     tile.OnClicked += PlaceTower;
                     tile.transform.SetParent(transform);
-                    tile.transform.localRotation = Quaternion.identity;
+                    tile.transform.localPosition = Vector3.zero;
+                    // FIXME for whaterer reason the ui is upside down
+                    tile.transform.localRotation = Quaternion.Euler(0,180,0);
                 }
             }
         }
