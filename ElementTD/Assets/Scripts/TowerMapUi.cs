@@ -44,8 +44,11 @@ namespace Assets.Scripts
 
         private void PlaceTower(Tile tile)
         {
-            var tower = Instantiate(currentTower);
-            tower.transform.position = tile.transform.position;
+            if (tile.Visible)
+            {
+                var tower = Instantiate(currentTower);
+                tower.transform.position = tile.transform.position;
+            }
         }
 
         public void setlectTower(GameObject tower)
