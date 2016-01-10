@@ -26,6 +26,11 @@ namespace Assets.Scripts
             }
         }
 
+        public bool InBounds(int x, int y)
+        {
+            return x >= 0 && x < Width && y >= 0 && y < Height;
+        }
+
         public void Ensure()
         {
             if (Data == null) Data = new bool[Width*Height];
