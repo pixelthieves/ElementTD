@@ -5,7 +5,7 @@ namespace Assets.Scripts
     [RequireComponent(typeof (CanvasGroup))]
     public class Tile : MonoBehaviour
     {
-        public delegate void OnClickedHandler(int x, int y);
+        public delegate void OnClickedHandler(Tile tile);
 
         public int X;
         public int Y;
@@ -20,7 +20,7 @@ namespace Assets.Scripts
 
         public void OnTileClicked()
         {
-            if (OnClicked != null) OnClicked(X, Y);
+            if (OnClicked != null) OnClicked(this);
         }
     }
 }

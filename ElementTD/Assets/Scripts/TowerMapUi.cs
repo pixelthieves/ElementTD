@@ -9,6 +9,7 @@ namespace Assets.Scripts
     {
         public TowerMap TowerMap;
         public Tile Tile;
+        public GameObject currentTower;
 
         private void Start()
         {
@@ -32,15 +33,22 @@ namespace Assets.Scripts
                     tile.Visible = TowerMap.IsAvailable(x, y);
                     tile.X = x;
                     tile.Y = y;
-                    tile.OnClicked += OnTileClicked;
+                    tile.OnClicked += PlaceTower;
                     tile.transform.SetParent(transform);
+                    tile.transform.localRotation = Quaternion.identity;
                 }
             }
         }
 
-        private void OnTileClicked(int x, int y)
+        private void PlaceTower(Tile tile)
         {
-            Debug.Log("Tile[" + x + ", " + y + "] has been clicked.");
+            var tower = Instantiate(currentTower);
+            tower.transform.position = tile.transform.position;
+        }
+
+        public void setlectTower(GameObject tower)
+        {
+            currentTower = tower;
         }
     }
 }
