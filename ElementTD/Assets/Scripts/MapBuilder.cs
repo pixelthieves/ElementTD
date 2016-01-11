@@ -4,12 +4,18 @@ using Assets.Shared.Scripts;
 using Pathfinding;
 using UnityEngine;
 
-[RequireComponent(typeof (TowerMap), typeof(AstarPath), typeof(BoxCollider))]
+[RequireComponent(typeof (TowerMap), typeof (AstarPath), typeof (BoxCollider))]
 public class MapBuilder : MonoBehaviour
 {
     public Texture2D Map;
 
+    public int tileSize;
     public int ForrestOffset;
+
+    public GameObject Start;
+    public GameObject End;
+
+    public GameObject Node;
     public GameObject Tile;
     public GameObject ForrestTile;
 
@@ -18,31 +24,45 @@ public class MapBuilder : MonoBehaviour
         transform.RemoveAllChildren();
         BuildMap();
 
-        GetComponent<BoxCollider>().size = new Vector3(Map.width, 0 , Map.height);
-
+        GetComponent<BoxCollider>().size = new Vector3(Map.width, 0, Map.height);
 
         var path = new GameObject("Path");
         path.transform.SetParent(transform);
 
+
+        var pathMapWidth = Map.width/2;
+        var pathMapHeight = Map.height/2;
         var map = GetComponent<TowerMap>();
         Fill(
-            Map.width/2,
-            Map.height/2,
+            pathMapWidth,
+            pathMapHeight,
             (x, y) =>
             {
                 if (map.PathMap[x*2, y*2])
                 {
-                    var node = new GameObject("PathNode");
-                    node.transform.localPosition = new Vector3(x - Map.width / 4, 0, y - Map.height / 4) * 2;
-                    node.transform.SetParent(path.transform);
+                    PlaceTile(x, y, pathMapWidth, pathMapHeight, 2, Node, path);
                 }
             });
+
+        //TODO I have no idea
+        path.transform.Translate(-1, 0, -1);
 
         var astar = gameObject.GetComponent<AstarPath>();
         var graph = astar.graphs[0] as PointGraph;
         graph.root = path.transform;
 
         astar.Scan();
+
+        PlacePathEnd(Start, Color.red);
+        PlacePathEnd(End, Color.blue);
+    }
+
+    private void PlacePathEnd(GameObject end, Color color)
+    {
+        var go = Instantiate(end);
+        var posXy = GetRect(Map, color).center;
+        go.transform.localPosition = new Vector3(posXy.x - Map.width/2, 0, posXy.y - Map.height / 2);
+        go.transform.SetParent(transform);
     }
 
     private void BuildMap()
@@ -60,11 +80,11 @@ public class MapBuilder : MonoBehaviour
             {
                 var pixel = Map.GetPixel(x, y);
 
-                map.PathMap[x, y] = pixel.linear == Color.black;
+                map.PathMap[x, y] = pixel.linear != Color.white;
 
-                if (pixel.linear != Color.black)
+                if (!map.PathMap[x, y])
                 {
-                    PlaceTile(x, y, Map.width, Map.height, Tile, tiles);
+                    PlaceTile(x, y, Map.width, Map.height, 1, Tile, tiles);
                 }
             });
 
@@ -80,15 +100,15 @@ public class MapBuilder : MonoBehaviour
             {
                 if (!map.InBounds(x, y))
                 {
-                    PlaceTile(x, y, Map.width, Map.height, ForrestTile, forrestTiles);
+                    PlaceTile(x, y, Map.width, Map.height, 1, ForrestTile, forrestTiles);
                 }
             });
     }
 
-    private void PlaceTile(int x, int y, int width, int height, GameObject tile, GameObject parent)
+    private void PlaceTile(int x, int y, int width, int height, int size, GameObject tile, GameObject parent)
     {
         var groundTile = Instantiate(tile);
-        groundTile.transform.localPosition = new Vector3(x - width/2 + 0.5f, 0, y - height/2 + 0.5f);
+        groundTile.transform.localPosition = new Vector3(x - width/2 + 0.5f, 0, y - height/2 + 0.5f)*size;
         groundTile.transform.SetParent(parent.transform);
     }
 
@@ -106,5 +126,24 @@ public class MapBuilder : MonoBehaviour
                 action(x, y);
             }
         }
+    }
+
+    private Rect GetRect(Texture2D tex, Color color)
+    {
+        var rect = new Rect(float.MaxValue, float.MaxValue, float.MinValue, float.MinValue);
+        for (var x = 0; x < tex.width; x++)
+        {
+            for (var y = 0; y < tex.height; y++)
+            {
+                if (tex.GetPixel(x, y) == color)
+                {
+                    rect.xMin = Math.Min(rect.xMin, x);
+                    rect.yMin = Math.Min(rect.yMin, y);
+                    rect.xMax = Math.Max(rect.xMax, x+1);
+                    rect.yMax = Math.Max(rect.yMax, y+1);
+                }
+            }
+        }
+        return rect;
     }
 }
