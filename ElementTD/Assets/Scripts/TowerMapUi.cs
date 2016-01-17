@@ -13,7 +13,7 @@ namespace Assets.Scripts
 
         private void Start()
         {
-            var rectTransform = GetComponent<RectTransform>();
+            /*var rectTransform = GetComponent<RectTransform>();
             rectTransform.SetWidth(TowerMap.Width);
             rectTransform.SetHeight(TowerMap.Height);
 
@@ -39,7 +39,7 @@ namespace Assets.Scripts
                     // FIXME for whaterer reason the ui is upside down
                     tile.transform.localRotation = Quaternion.Euler(0,180,0);
                 }
-            }
+            }*/
         }
 
         private void PlaceTower(Tile tile)
