@@ -1,15 +1,14 @@
 ﻿using System;
 using Assets.Scripts;
 using Assets.Shared.Scripts;
-using Pathfinding;
 using UnityEngine;
 
-[RequireComponent(typeof (TowerMap), typeof (AstarPath), typeof (BoxCollider))]
+[RequireComponent(typeof (TowerMap), typeof (BoxCollider))]
 public class MapBuilder : MonoBehaviour
 {
     public Texture2D Map;
 
-    public int tileSize;
+    public int TileSize;
     public int ForrestOffset;
 
     public GameObject Start;
@@ -22,69 +21,68 @@ public class MapBuilder : MonoBehaviour
     public void Build()
     {
         transform.RemoveAllChildren();
-        BuildMap();
 
-        GetComponent<BoxCollider>().size = new Vector3(Map.width, 0, Map.height);
+        var scaledTexture = new Texture2D(Map.width*2, Map.height*2);
+        for (var x = 0; x < scaledTexture.width; x++)
+        {
+            for (var y = 0; y < scaledTexture.height; y++)
+            {
+                var pixel = Map.GetPixel(x/TileSize, y/TileSize);
+                scaledTexture.SetPixel(x, y, pixel);
+            }
+        }
+        var map = GetComponent<TowerMap>();
+        BuildMap(Map);
+        BuildWorld(map, TileSize);
+
+        GetComponent<BoxCollider>().size = new Vector3(scaledTexture.width, 0, scaledTexture.height);
+
+        var start = PlacePathEnd(scaledTexture, Start, Color.red);
+        PlacePathEnd(scaledTexture, End, Color.blue);
 
         var path = new GameObject("Path");
         path.transform.SetParent(transform);
+        path.transform.localPosition = start + Vector3.forward;
 
-
-        var pathMapWidth = Map.width/2;
-        var pathMapHeight = Map.height/2;
-        var map = GetComponent<TowerMap>();
-        Fill(
-            pathMapWidth,
-            pathMapHeight,
-            (x, y) =>
-            {
-                if (map.PathMap[x*2, y*2])
-                {
-                    PlaceTile(x, y, pathMapWidth, pathMapHeight, 2, Node, path);
-                }
-            });
-
-        //TODO I have no idea
-        path.transform.Translate(-1, 0, -1);
-
-        var astar = gameObject.GetComponent<AstarPath>();
-        var graph = astar.graphs[0] as PointGraph;
-        graph.root = path.transform;
-
-        astar.Scan();
-
-        PlacePathEnd(Start, Color.red);
-        PlacePathEnd(End, Color.blue);
+        var wolrdPath = path.AddComponent<Path>();
+        wolrdPath.Init(map, 1,8, TileSize);
     }
 
-    private void PlacePathEnd(GameObject end, Color color)
+    private Vector3 PlacePathEnd(Texture2D m, GameObject end, Color color)
     {
         var go = Instantiate(end);
-        var posXy = GetRect(Map, color).center;
-        go.transform.localPosition = new Vector3(posXy.x - Map.width/2, 0, posXy.y - Map.height / 2);
+        var posXy = GetRect(m, color).center;
+        go.transform.localPosition = new Vector3(posXy.x - m.width, 0, posXy.y - m.height);
         go.transform.SetParent(transform);
+        return go.transform.position;
     }
 
-    private void BuildMap()
+    private void BuildMap(Texture2D source)
     {
         var map = GetComponent<TowerMap>();
-        map.PathMap = new bool[Map.width, Map.height];
+        map.PathMap = new bool[source.width, source.height];
 
+        Fill(
+            source.width,
+            source.height,
+            (x, y) => { map.PathMap[x, y] = source.GetPixel(x, y).linear != Color.white; });
+    }
+
+    private void BuildWorld(TowerMap m, int tileSize)
+    {
         var tiles = new GameObject("Tiles");
         tiles.transform.SetParent(transform);
 
+        var sWidth = m.Width*tileSize;
+        var sHeight = m.Height*tileSize;
         Fill(
-            Map.width,
-            Map.height,
+            sWidth,
+            sHeight,
             (x, y) =>
             {
-                var pixel = Map.GetPixel(x, y);
-
-                map.PathMap[x, y] = pixel.linear != Color.white;
-
-                if (!map.PathMap[x, y])
+                if (!m.PathMap[x/tileSize, y/tileSize])
                 {
-                    PlaceTile(x, y, Map.width, Map.height, 1, Tile, tiles);
+                    PlaceTile(x, y, sWidth, sHeight, 1, Tile, tiles);
                 }
             });
 
@@ -94,13 +92,13 @@ public class MapBuilder : MonoBehaviour
         Fill(
             -ForrestOffset,
             -ForrestOffset,
-            Map.width + ForrestOffset,
-            Map.height + ForrestOffset,
+            sWidth + ForrestOffset,
+            sHeight + ForrestOffset,
             (x, y) =>
             {
-                if (!map.InBounds(x, y))
+                if (!m.InBounds(x/tileSize, y/tileSize))
                 {
-                    PlaceTile(x, y, Map.width, Map.height, 1, ForrestTile, forrestTiles);
+                    PlaceTile(x, y, sWidth, sHeight, 1, ForrestTile, forrestTiles);
                 }
             });
     }
@@ -108,7 +106,8 @@ public class MapBuilder : MonoBehaviour
     private void PlaceTile(int x, int y, int width, int height, int size, GameObject tile, GameObject parent)
     {
         var groundTile = Instantiate(tile);
-        groundTile.transform.localPosition = new Vector3(x - width/2 + 0.5f, 0, y - height/2 + 0.5f)*size;
+        groundTile.name += " [" + x + ", " + y + "]";
+        groundTile.transform.localPosition = new Vector3(x - width + 0.5f, 0, y - height + 0.5f)*size;
         groundTile.transform.SetParent(parent.transform);
     }
 
@@ -139,8 +138,8 @@ public class MapBuilder : MonoBehaviour
                 {
                     rect.xMin = Math.Min(rect.xMin, x);
                     rect.yMin = Math.Min(rect.yMin, y);
-                    rect.xMax = Math.Max(rect.xMax, x+1);
-                    rect.yMax = Math.Max(rect.yMax, y+1);
+                    rect.xMax = Math.Max(rect.xMax, x + 1);
+                    rect.yMax = Math.Max(rect.yMax, y + 1);
                 }
             }
         }
