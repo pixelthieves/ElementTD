@@ -12,7 +12,7 @@ public class PathBuilder
         Right
     }
 
-    private static float QUADRANT = (float) (Math.PI/2.0);
+    private static readonly float QUADRANT = (float) (Math.PI/2.0);
     private Vector2 position;
     private Vector2 currentDirection;
 
@@ -29,7 +29,7 @@ public class PathBuilder
         this.pathWidth = pathWidth;
 
         paths = createPaths(pathsCount);
-        pathsSpacing = pathWidth / (pathsCount - 1);
+        pathsSpacing = pathWidth/(pathsCount - 1);
     }
 
     private static List<List<Vector2>> createPaths(int pathsCount)
@@ -83,7 +83,7 @@ public class PathBuilder
 
         for (var i = 1; i <= segments; i++)
         {
-            var d = startAngle + angle/ segments * i;
+            var d = startAngle + angle/segments*i;
             var x = (float) (corner.x + Math.Cos(d)*tileSize/2f);
             var y = (float) (corner.y + Math.Sin(d)*tileSize/2f);
             var point = new Vector2(x, y);

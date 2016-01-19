@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 
-namespace Assets.Scripts
+namespace Tower
 {
-    public class TowerMap : MonoBehaviour
+    public class Map : MonoBehaviour
     {
         public bool[,] PathMap;
+        public float TileSize;
 
         private Tower[,] towerMap;
 

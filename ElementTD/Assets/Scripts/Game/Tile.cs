@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets.Scripts
+namespace Game
 {
     [RequireComponent(typeof (CanvasGroup))]
     public class Tile : MonoBehaviour

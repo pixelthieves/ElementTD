@@ -1,13 +1,13 @@
-﻿using Assets.Shared.Scripts;
+﻿using Game;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Assets.Scripts
+namespace Tower
 {
     [RequireComponent(typeof (GridLayoutGroup))]
     public class TowerMapUi : MonoBehaviour
     {
-        public TowerMap TowerMap;
+        public Map TowerMap;
         public Tile Tile;
         public GameObject currentTower;
 
