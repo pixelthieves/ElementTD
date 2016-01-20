@@ -17,26 +17,27 @@ namespace Creep
         private void Start()
         {
             path = GetComponent<PathView>();
-            goal = path.Goal;
+            goal = path.NextPoint;
         }
         private void Update()
         {
-            float travelAbility = speed*Time.deltaTime;
+            var time = Time.deltaTime;
 
             while (true)
             {
                 float distance = goal.Distance(transform.position);
-                if (distance >= travelAbility) break;
+                if (distance >= time * speed * path.SegmentLengthRatio) break;
 
                 move(distance);
                 if (!path.next())
                 {
                     // TODO End of path
                 }
-                goal = path.Goal;
-                travelAbility -= distance;
+                goal = path.NextPoint;
+                Debug.Log(path.SegmentLengthRatio);
+                time -= distance / (speed * path.SegmentLengthRatio);
             }
-            move(travelAbility);
+            move(time * speed * path.SegmentLengthRatio);
         }
 
         private void move(float travelAbility)
