@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Timers;
 using Creep;
 using UnityEngine;
 using UnitySharedLibrary.Scripts;
@@ -9,7 +8,7 @@ using Vexe.Runtime.Types;
 
 namespace Game
 {
-    [RequireComponent(typeof(Path))]
+    [RequireComponent(typeof (Path))]
     public class WaveSpawner : BetterBehaviour
     {
         public Vector3 Direction;
@@ -19,13 +18,13 @@ namespace Game
 
         public WaveInfo[] WaveInfo;
         private int currentWave;
-        private int BaseWaveCount = 10;
-        private float SpawnTime = 1;
-        private int SwarmMultiplier = 4;
+        private readonly int BaseWaveCount = 10;
+        private readonly float SpawnTime = 1;
+        private readonly int SwarmMultiplier = 4;
 
         private void Start()
         {
-            var timer = transform.GetOrAddComponent< SuperTimer>();
+            var timer = transform.GetOrAddComponent<SuperTimer>();
             timer.Interval = Delay;
             timer.AutoReset = true;
             timer.OnElapsed += () =>
@@ -34,6 +33,16 @@ namespace Game
                 timer.Interval = Interval;
             };
             timer.StartCouroutine();
+
+//            var timer = new Timer();
+//            timer.Interval = Delay;
+//            timer.AutoReset = true;
+//            timer.Elapsed += (a,b) =>
+//            {
+//                SpawnWave(WaveInfo[currentWave++]);
+//                timer.Interval = Interval;
+//            };
+//            timer.Start();
         }
 
         private void SpawnWave(WaveInfo waveInfo)
