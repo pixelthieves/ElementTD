@@ -29,16 +29,6 @@ namespace Game
             }
         }
 
-        public Vector3 FirstCenterPoint
-        {
-            get
-            {
-                var p = path.WorldPath;
-                var w = path.Width;
-                return p[0][0].HalfWay(p[w - 1][0]);
-            }
-        }
-
         public Vector3 PrevPoint
         {
             get

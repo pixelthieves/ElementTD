@@ -1,6 +1,8 @@
-﻿using Vexe.Runtime.Types; // for BetterBehaviour, BetterScriptableObject and uAction
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Assets.Shared.Scripts;
 using UnityEngine;
+using Vexe.Runtime.Types;
+// for BetterBehaviour, BetterScriptableObject and uAction
 
 namespace Game
 {
@@ -9,6 +11,16 @@ namespace Game
         public List<List<Vector3>> WorldPath { get; private set; }
         public int Length { get; private set; }
         public int Width { get; private set; }
+
+        public Vector3 FirstRightPoint
+        {
+            get { return WorldPath[Width - 1][0]; }
+        }
+
+        public Vector3 FirstLeftPoint
+        {
+            get { return WorldPath[0][0]; }
+        }
 
         public void Init(List<List<Vector3>> path)
         {

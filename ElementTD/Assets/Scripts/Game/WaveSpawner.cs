@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Assets.Shared.Scripts;
 using Creep;
 using UnityEngine;
 using UnitySharedLibrary.Scripts;
 using Vexe.Runtime.Extensions;
 using Vexe.Runtime.Types;
+using Random = UnityEngine.Random;
 
 namespace Game
 {
@@ -12,15 +14,15 @@ namespace Game
     public class WaveSpawner : BetterBehaviour
     {
         public Vector3 Direction;
-
         public float Interval;
         public float Delay;
-
         public WaveInfo[] WaveInfo;
+
         private int currentWave;
         private readonly int BaseWaveCount = 10;
         private readonly float SpawnTime = 1;
         private readonly int SwarmMultiplier = 4;
+        private Path path;
 
         private void Start()
         {
@@ -33,23 +35,24 @@ namespace Game
                 timer.Interval = Interval;
             };
             timer.StartCouroutine();
+            path = GetComponent<Path>();
 
-//            var timer = new Timer();
-//            timer.Interval = Delay;
-//            timer.AutoReset = true;
-//            timer.Elapsed += (a,b) =>
-//            {
-//                SpawnWave(WaveInfo[currentWave++]);
-//                timer.Interval = Interval;
-//            };
-//            timer.Start();
+            //            var timer = new Timer();
+            //            timer.Interval = Delay;
+            //            timer.AutoReset = true;
+            //            timer.Elapsed += (a,b) =>
+            //            {
+            //                SpawnWave(WaveInfo[currentWave++]);
+            //                timer.Interval = Interval;
+            //            };
+            //            timer.Start();
         }
 
         private void SpawnWave(WaveInfo waveInfo)
         {
             var creepWaveCount = getCreepsInWave(waveInfo);
             var healthMultiplier = getHeahtMultiplier(waveInfo);
-            var spread = (float) creepWaveCount/BaseWaveCount - 1;
+            var spread = (float) creepWaveCount/BaseWaveCount;
             var spawnTime = SpawnTime/((float) creepWaveCount/BaseWaveCount);
 
             var couroutine = RepeatCoroutine.Start(0, spawnTime, creepWaveCount, () =>
@@ -57,10 +60,15 @@ namespace Game
                 var creep = Instantiate(waveInfo.Creep);
 
                 // TODO spread position
-                var component = GetComponent<Path>();
-                creep.GetComponent<PathView>().path = component;
+
+                creep.GetComponent<PathView>().path = path;
                 creep.GetComponent<Health>().MaxHealth *= healthMultiplier;
-                creep.transform.position = creep.GetComponent<PathView>().FirstCenterPoint;
+
+                var widthDiff = (spread/path.Width);
+                var offset = (1 - widthDiff)/2f;
+                var pos = Vector3.Lerp(path.FirstLeftPoint, path.FirstRightPoint, offset + Random.value*widthDiff);
+
+                creep.transform.position = pos;
             });
 
             StartCoroutine(couroutine);
