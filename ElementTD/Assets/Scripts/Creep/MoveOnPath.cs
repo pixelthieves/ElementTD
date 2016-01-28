@@ -34,7 +34,7 @@ namespace Creep
                     // TODO End of path
                 }
                 goal = path.NextPoint;
-                Debug.Log(path.SegmentLengthRatio);
+
                 time -= distance / (speed * path.SegmentLengthRatio);
             }
             move(time * speed * path.SegmentLengthRatio);
