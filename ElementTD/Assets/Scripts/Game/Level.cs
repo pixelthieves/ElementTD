@@ -19,8 +19,10 @@ namespace Game
             var pathData = PathFromMap.Build(map, 1, 8);
             pathData = pathData.Select(p => p.Select(v => v + worldBuilder.Start + Vector3.forward).ToList()).ToList();
 
-            WaveSpawner.transform.SetParent(transform);
-            var path =  WaveSpawner.GetComponent<Path>();
+            var waveSpawnerGo = Instantiate(WaveSpawner);
+            waveSpawnerGo.name = "Wave Spawner";
+            waveSpawnerGo.transform.SetParent(transform);
+            var path = waveSpawnerGo.GetComponent<Path>();
             path.Init(pathData);
         }
     }
