@@ -42,7 +42,11 @@ namespace Creep
 
         private void move(float travelAbility)
         {
-            transform.position += travelAbility*(goal - transform.position).normalized;
+            var destination = transform.position + travelAbility * (goal - transform.position).normalized;
+
+            // TODO Smooth the rotation
+            transform.LookAt(destination, Vector3.up);
+            transform.position = destination;
         }
     }
 }
