@@ -23,6 +23,10 @@ namespace Game
         private Blueprint blueprint;
         private GameObject structures;
 
+        public int PathCount;
+        public int PathSegmentCount;
+        public float PathWidth;
+
         public Vector3 End { get; set; }
 
         public Vector3 Start { get; set; }
@@ -45,8 +49,9 @@ namespace Game
             Start = GetObjectPostion(scaledTexture, Color.red);
             End = GetObjectPostion(scaledTexture, Color.blue);
 
+            var pathSettings = new PathBuilder.Settings(PathCount, PathSegmentCount, TileSize, TileSize*PathWidth);
             // FIXME hardcoded inital position
-            var pathData = PathFromMap.Build(blueprint, 1, 8);
+            var pathData = PathFromMap.Build(blueprint, 1, 8, pathSettings);
             pathData = pathData.Select(p => p.Select(v => v + Start + Vector3.forward).ToList()).ToList();
 
             var waveSpawnerGo = Instantiate(WaveSpawner);
@@ -85,12 +90,11 @@ namespace Game
                 }
             }
             blueprint.PathMap = grid;
-            blueprint.TileSize = TileSize;
         }
 
         private Texture2D ScaleTexture(Texture2D originalTexture, int scale)
         {
-            var scaledTexture = new Texture2D(originalTexture.width* scale, originalTexture.height* scale);
+            var scaledTexture = new Texture2D(originalTexture.width*scale, originalTexture.height*scale);
             for (var x = 0; x < scaledTexture.width; x++)
             {
                 for (var y = 0; y < scaledTexture.height; y++)
@@ -109,7 +113,7 @@ namespace Game
             {
                 for (var y = -ForrestOffset; y < mapHeight + ForrestOffset; y++)
                 {
-                    if (!blueprint.InBounds((float)x/TileSize, (float)y / TileSize))
+                    if (!blueprint.InBounds((float) x/TileSize, (float) y/TileSize))
                     {
                         PlaceTile(x, y, mapWidth, mapHeight, 1, ForrestTile, forrestTiles);
                     }
@@ -125,7 +129,7 @@ namespace Game
             {
                 for (var y = 0; y < mapHeight; y++)
                 {
-                    if (!blueprint.PathMap[x/ TileSize, y/ TileSize])
+                    if (!blueprint.PathMap[x/TileSize, y/TileSize])
                     {
                         PlaceTile(x, y, mapWidth, mapHeight, 1, Tile, tiles);
                     }

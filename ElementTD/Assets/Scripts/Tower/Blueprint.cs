@@ -5,7 +5,6 @@ namespace Tower
     public class Blueprint : MonoBehaviour
     {
         public bool[,] PathMap;
-        public float TileSize;
 
         private Tower[,] towerMap;
 
@@ -27,11 +26,6 @@ namespace Tower
         public bool IsPath(int x, int y)
         {
             return InBounds(x, y) && PathMap[x, y];
-        }
-
-        private void Awake()
-        {
-            //towerMap = new Tower[PathMap.Width, PathMap.Height];
         }
 
         public bool IsAvailable(int x, int y)

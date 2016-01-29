@@ -22,14 +22,31 @@ public class PathBuilder
     private readonly List<List<Vector2>> paths;
     private readonly float pathsSpacing;
 
-    public PathBuilder(int pathsCount, int segmentCount, float tileSize, float pathWidth)
+    [Serializable]
+    public struct Settings
     {
-        this.segmentCount = segmentCount;
-        this.tileSize = tileSize;
-        this.pathWidth = pathWidth;
+        public float PathWidth { get; private set; }
+        public float TileSize { get; private set; }
+        public int SegmentCount { get; private set; }
+        public int PathsCount { get; private set; }
 
-        paths = createPaths(pathsCount);
-        pathsSpacing = pathWidth/(pathsCount - 1);
+        public Settings(int pathsCount, int segmentCount, float tileSize, float pathWidth): this()
+        {
+            PathsCount = pathsCount;
+            SegmentCount = segmentCount;
+            TileSize = tileSize;
+            PathWidth = pathWidth;
+        }
+    }
+
+    public PathBuilder(Settings settings)
+    {
+        segmentCount = settings.SegmentCount;
+        tileSize = settings.TileSize;
+        pathWidth = settings.PathWidth;
+
+        paths = createPaths(settings.PathsCount);
+        pathsSpacing = pathWidth/(settings.PathsCount - 1);
     }
 
     private static List<List<Vector2>> createPaths(int pathsCount)

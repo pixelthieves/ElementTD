@@ -8,12 +8,12 @@ namespace Game
 {
     public class PathFromMap : MonoBehaviour
     {
-        public static List<List<Vector3>> Build(Blueprint map, int x, int y)
+        public static List<List<Vector3>> Build(Blueprint map, int x, int y, PathBuilder.Settings pathSettings)
         {
             var commands = CreatePath(map, x, y);
             //TODO pass direction as argument
-            var path = new PathBuilder(10, 15, map.TileSize, 1).Build(commands, Vector2.down);
-            var initialPostion = Vector2.zero; // nodes[0].position - Vector3.forward;
+            var path = new PathBuilder(pathSettings).Build(commands, Vector2.down);
+            var initialPostion = Vector2.zero;
             return PathToWorld(initialPostion, path);
         }
 
