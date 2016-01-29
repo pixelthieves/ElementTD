@@ -7,7 +7,7 @@ namespace Tower
     [RequireComponent(typeof (GridLayoutGroup))]
     public class TowerMapUi : MonoBehaviour
     {
-        public Map TowerMap;
+        public Blueprint TowerMap;
         public Tile Tile;
         public GameObject currentTower;
 

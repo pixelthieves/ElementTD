@@ -8,7 +8,7 @@ namespace Game
 {
     public class PathFromMap : MonoBehaviour
     {
-        public static List<List<Vector3>> Build(Map map, int x, int y)
+        public static List<List<Vector3>> Build(Blueprint map, int x, int y)
         {
             var commands = CreatePath(map, x, y);
             //TODO pass direction as argument
@@ -17,14 +17,14 @@ namespace Game
             return PathToWorld(initialPostion, path);
         }
 
-        private static List<PathBuilder.Dir> CreatePath(Map map, int x, int y)
+        private static List<PathBuilder.Dir> CreatePath(Blueprint map, int x, int y)
         {
             var directions = new List<PathBuilder.Dir>();
             CreatePath(directions, Vector2.down, map, new Vector2(x, y));
             return directions;
         }
 
-        private static void CreatePath(List<PathBuilder.Dir> directions, Vector2 currentDir, Map map, Vector2 position)
+        private static void CreatePath(List<PathBuilder.Dir> directions, Vector2 currentDir, Blueprint map, Vector2 position)
         {
             var right = new Vector2(1, 0);
             var up = new Vector2(0, 1);
@@ -37,7 +37,7 @@ namespace Game
             ValidateDir(directions, currentDir, position, map, down);
         }
 
-        private static void ValidateDir(List<PathBuilder.Dir> directions, Vector2 currentDir, Vector2 position, Map map,
+        private static void ValidateDir(List<PathBuilder.Dir> directions, Vector2 currentDir, Vector2 position, Blueprint map,
             Vector2 newDirection)
         {
             if (map.IsPath((int) (position.x + newDirection.x), (int) (position.y + newDirection.y)))

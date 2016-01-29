@@ -69,6 +69,7 @@ namespace Game
                 var pos = Vector3.Lerp(path.FirstLeftPoint, path.FirstRightPoint, offset + Random.value*widthDiff);
 
                 creep.transform.position = pos;
+                creep.transform.SetParent(transform);
             });
 
             StartCoroutine(couroutine);

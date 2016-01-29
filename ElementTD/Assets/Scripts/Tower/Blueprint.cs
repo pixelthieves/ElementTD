@@ -2,7 +2,7 @@
 
 namespace Tower
 {
-    public class Map : MonoBehaviour
+    public class Blueprint : MonoBehaviour
     {
         public bool[,] PathMap;
         public float TileSize;
@@ -19,7 +19,7 @@ namespace Tower
             get { return PathMap.GetLength(1); }
         }
 
-        public bool InBounds(int x, int y)
+        public bool InBounds(float x, float y)
         {
             return x >= 0 && x < Width && y >= 0 && y < Height;
         }
