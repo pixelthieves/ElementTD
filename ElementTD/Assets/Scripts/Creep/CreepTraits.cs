@@ -2,6 +2,13 @@
 {
     public enum CreepTraits
     {
-        Swarm, Boss
+        Swarm,
+        Boss,
+        Normal,
+        Fast,
+        Resurrect,
+        Spawn,
+        Invisible,
+        Healing
     }
 }

@@ -7,7 +7,7 @@ namespace Game
 {
     public class Wave
     {
-        private List<CreepEntity> creeps;
+        private List<CreepEntity> creeps = new List<CreepEntity>();
         public event Action OnWaveCompleted;
 
         public void AddCreep(CreepEntity creep)
