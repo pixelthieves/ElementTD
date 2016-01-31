@@ -16,12 +16,13 @@ namespace Game
         public Vector3 Direction;
         public float Interval;
         public float Delay;
+        public int BaseWaveCount = 10;
+        public float SpawnTime = 1;
+        public int SwarmMultiplier = 4;
         public WaveInfo[] WaveInfo;
 
+        private List<Wave> waves;
         private int currentWave;
-        private readonly int BaseWaveCount = 10;
-        private readonly float SpawnTime = 1;
-        private readonly int SwarmMultiplier = 4;
         private Path path;
 
         private void Start()
@@ -59,20 +60,26 @@ namespace Game
             {
                 var creep = Instantiate(waveInfo.Creep);
 
-                // TODO spread position
-
-                creep.GetComponent<PathView>().path = path;
+                creep.gameObject.GetComponent<PathView>().Path = path;
                 creep.GetComponent<Health>().MaxHealth *= healthMultiplier;
-
-                var widthDiff = (spread/path.Width);
-                var offset = (1 - widthDiff)/2f;
-                var pos = Vector3.Lerp(path.FirstLeftPoint, path.FirstRightPoint, offset + Random.value*widthDiff);
-
-                creep.transform.position = pos;
+                creep.GetComponent<MoveOnPath>().OnPathEndReached += () =>
+                {
+                    creep.gameObject.GetComponent<PathView>().Path = path;
+                    creep.transform.position = GetInitalPosition(spread);
+                };
+                creep.transform.position = GetInitalPosition(spread);
                 creep.transform.SetParent(transform);
             });
 
             StartCoroutine(couroutine);
+        }
+
+        private Vector3 GetInitalPosition(float spread)
+        {
+            var widthDiff = spread/path.Width;
+            var offset = (1 - widthDiff)/2f;
+            var pos = Vector3.Lerp(path.FirstLeftPoint, path.FirstRightPoint, offset + Random.value*widthDiff);
+            return pos;
         }
 
         private float getHeahtMultiplier(WaveInfo waveInfo)

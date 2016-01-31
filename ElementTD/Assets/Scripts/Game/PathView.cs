@@ -5,9 +5,18 @@ namespace Game
 {
     public class PathView : MonoBehaviour
     {
-        public Path path;
-
         private int i;
+        private Path path;
+
+        public Path Path
+        {
+            get { return path; }
+            set
+            {
+                path = value;
+                i = 0;
+            }
+        }
 
         private int CurrentPathIndex
         {
@@ -16,9 +25,9 @@ namespace Game
                 var closest = 0;
                 var closestDistance = float.MaxValue;
 
-                for (var j = 0; j < path.Width; j++)
+                for (var j = 0; j < Path.Width; j++)
                 {
-                    var currentDistance = transform.position.Distance(path.WorldPath[j][i]);
+                    var currentDistance = transform.position.Distance(Path.WorldPath[j][i]);
                     if (currentDistance < closestDistance)
                     {
                         closestDistance = currentDistance;
@@ -31,26 +40,20 @@ namespace Game
 
         public Vector3 PrevPoint
         {
-            get
-            {
-                return path.WorldPath[CurrentPathIndex][i-1];
-            }
+            get { return Path.WorldPath[CurrentPathIndex][i - 1]; }
         }
 
         public Vector3 NextPoint
         {
-            get
-            {
-                return path.WorldPath[CurrentPathIndex][i];
-            }
+            get { return Path.WorldPath[CurrentPathIndex][i]; }
         }
 
         public Vector3 PrevCenterPoint
         {
             get
             {
-                var p = path.WorldPath;
-                var w = path.Width;
+                var p = Path.WorldPath;
+                var w = Path.Width;
                 return p[0][i - 1].HalfWay(p[w - 1][i - 1]);
             }
         }
@@ -59,8 +62,8 @@ namespace Game
         {
             get
             {
-                var p = path.WorldPath;
-                var w = path.Width;
+                var p = Path.WorldPath;
+                var w = Path.Width;
                 return p[0][i].HalfWay(p[w - 1][i]);
             }
         }
@@ -73,13 +76,16 @@ namespace Game
 
                 var baseDistance = PrevCenterPoint.Distance(NextCenterPoint);
                 var currentDistance = PrevPoint.Distance(NextPoint);
-                return currentDistance / baseDistance;
+                return currentDistance/baseDistance;
             }
         }
 
         public bool next()
         {
-            if (path.Length <= i - 1) return false;
+            if (i + 1 >= path.Length)
+            {
+                return false;
+            }
 
             i++;
             return true;
