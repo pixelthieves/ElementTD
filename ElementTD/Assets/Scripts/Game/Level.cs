@@ -142,14 +142,14 @@ namespace Game
         {
             var groundTile = Instantiate(tile);
             groundTile.name += " [" + x + ", " + y + "]";
-            groundTile.transform.localPosition = new Vector3(x - width + 0.5f, 0, y - height + 0.5f)*size;
+            groundTile.transform.localPosition = new Vector3(x - width/2f + 0.5f, 0, y - height/2f + 0.5f)*size;
             groundTile.transform.SetParent(parent.transform);
         }
 
         private static Vector3 GetObjectPostion(Texture2D m, Color color)
         {
             var posXy = GetRect(m, color).center;
-            return new Vector3(posXy.x - m.width, 0, posXy.y - m.height);
+            return new Vector3(posXy.x - m.width/2f, 0, posXy.y - m.height/2f);
         }
 
         private static Rect GetRect(Texture2D tex, Color color)
