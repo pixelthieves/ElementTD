@@ -63,6 +63,14 @@ namespace Game
 
             var towers = new GameObject("Towers");
             towers.transform.SetParent(transform);
+
+            var boundedCamera = Camera.main.GetOrAddComponent<BoundedCamera>();
+            boundedCamera.Ground = transform;
+            boundedCamera.Bounds = new Rect
+            {
+                size = new Vector2(blueprint.Width + ForrestOffset, blueprint.Height + ForrestOffset) * TileSize,
+                center = transform.position
+            };
         }
 
         private void BuildStructures()
