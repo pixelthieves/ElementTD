@@ -57,7 +57,7 @@ namespace Game
 
         private static List<List<Vector3>> PathToWorld(Vector3 initialPostion, List<List<Vector2>> path)
         {
-            return path.Select(o => o.Select(v => initialPostion + v.FromXZ()).ToList()).ToList();
+            return path.Select(o => o.Select(v => initialPostion + v.ToXZ()).ToList()).ToList();
         }
     }
 }
