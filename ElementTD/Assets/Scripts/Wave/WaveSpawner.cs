@@ -3,52 +3,27 @@ using Creep;
 using UnityEngine;
 using UnitySharedLibrary.Scripts;
 using Vexe.Runtime.Extensions;
-using Vexe.Runtime.Types;
 using Random = UnityEngine.Random;
 
 namespace Game
 {
     [RequireComponent(typeof (Path))]
-    public class WaveSpawner : BetterBehaviour
+    public class WaveSpawner : RepeatingBehavior
     {
         public Vector3 Direction;
-        public float Interval;
-        public float Delay;
         public CreepEntity Creep;
         public WaveInfo.Settings settings;
 
         private List<WaveInfo> waveInfo;
         private List<Wave> waves;
         private int currentWave;
-        private Path path;
 
         private GameObject player;
 
         private void Start()
         {
             player = GameObject.FindGameObjectWithTag("Player");
-
             waveInfo = WaveInfo.Build(WaveDraft.GetNormal(), settings);
-            var timer = transform.GetOrAddComponent<SuperTimer>();
-            timer.Interval = Delay;
-            timer.AutoReset = true;
-            timer.OnElapsed += () =>
-            {
-                SpawnWave(waveInfo[currentWave++]);
-                timer.Interval = Interval;
-            };
-            timer.StartCouroutine();
-            path = GetComponent<Path>();
-
-            //            var timer = new Timer();
-            //            timer.Interval = Delay;
-            //            timer.AutoReset = true;
-            //            timer.Elapsed += (a,b) =>
-            //            {
-            //                SpawnWave(WaveInfo[currentWave++]);
-            //                timer.Interval = Interval;
-            //            };
-            //            timer.Start();
         }
 
         private void SpawnWave(WaveInfo waveDraft)
@@ -58,7 +33,7 @@ namespace Game
             {
                 var creep = Instantiate(Creep);
 
-                creep.GetComponent<PathView>().Path = path;
+                creep.GetComponent<PathView>().Path = GetComponent<Path>();
                 creep.GetComponent<Health>().MaxHealth = waveDraft.Health;
                 creep.GetComponent<Health>().OnDead += () =>
                 {
@@ -67,7 +42,7 @@ namespace Game
 
                 creep.GetComponent<MoveOnPath>().OnPathEndReached += () =>
                 {
-                    creep.gameObject.GetComponent<PathView>().Path = path;
+                    creep.gameObject.GetComponent<PathView>().Path = GetComponent<Path>();
                     creep.transform.position = GetInitalPosition(waveDraft.Spread);
                 };
                 creep.GetOrAddComponent<Wallet>().Treasure = waveDraft.Tresure;
@@ -81,10 +56,16 @@ namespace Game
 
         private Vector3 GetInitalPosition(float spread)
         {
+            var path = GetComponent<Path>();
             var widthDiff = spread/path.Width;
             var offset = (1 - widthDiff)/2f;
             var pos = Vector3.Lerp(path.FirstLeftPoint, path.FirstRightPoint, offset + Random.value*widthDiff);
             return pos;
+        }
+
+        protected override void Action()
+        {
+            SpawnWave(waveInfo[currentWave++]);
         }
     }
 }
