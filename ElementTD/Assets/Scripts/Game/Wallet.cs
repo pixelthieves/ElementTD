@@ -40,14 +40,10 @@ namespace Game
             });
         }
 
-        public int GetGold()
+        public int Gold
         {
-            return Treasure[Element.Gold];
-        }
-
-        public void AddGold(int gold)
-        {
-            Treasure[Element.Gold] = gold;
+            get { return Treasure[Element.Gold]; }
+            set { Treasure[Element.Gold] = value; }
         }
     }
 
