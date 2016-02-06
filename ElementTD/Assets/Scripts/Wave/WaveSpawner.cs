@@ -65,7 +65,8 @@ namespace Game
 
         protected override void Action()
         {
-            SpawnWave(waveInfo[currentWave++]);
+            if (currentWave < waveInfo.Count)
+                SpawnWave(waveInfo[currentWave++]);
         }
     }
 }
