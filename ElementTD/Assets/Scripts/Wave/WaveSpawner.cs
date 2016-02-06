@@ -10,7 +10,6 @@ namespace Game
     [RequireComponent(typeof (Path))]
     public class WaveSpawner : RepeatingBehavior
     {
-        public Vector3 Direction;
         public CreepEntity Creep;
         public WaveInfo.Settings settings;
 
