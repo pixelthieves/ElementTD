@@ -1,14 +1,15 @@
 ﻿using System;
 using UnityEngine;
+using Vexe.Runtime.Types;
 
 namespace Game
 {
-    public class Health : MonoBehaviour
+    public class Health : BetterBehaviour
     {
         private float currentHealth;
         public float MaxHealth { get; set; }
 
-        [SerializeField]
+        [Show]
         public float CurrentHealth
         {
             get { return currentHealth; }
