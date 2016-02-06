@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Game;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Ui
@@ -17,5 +18,18 @@ namespace Ui
         public Text NextWaveText;
         public Button NextWaveButton;
         public RectTransform TowerGrid;
+
+        private GameObject player;
+
+        private void Start()
+        {
+            player = GameObject.FindGameObjectWithTag("Player");
+        }
+
+        public void Update()
+        {
+            LivesText.text = player.GetComponent<Health>().CurrentHealth.ToString("0");
+            GoldText.text = player.GetComponent<Wallet>().Gold.ToString("0");
+        }
     }
 }
