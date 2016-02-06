@@ -22,8 +22,12 @@ namespace Game
         private int currentWave;
         private Path path;
 
+        private GameObject player;
+
         private void Start()
         {
+            player = GameObject.FindGameObjectWithTag("Player");
+
             waveInfo = WaveInfo.Build(WaveDraft.GetNormal(), settings);
             var timer = transform.GetOrAddComponent<SuperTimer>();
             timer.Interval = Delay;
@@ -54,13 +58,19 @@ namespace Game
             {
                 var creep = Instantiate(Creep);
 
-                creep.gameObject.GetComponent<PathView>().Path = path;
+                creep.GetComponent<PathView>().Path = path;
                 creep.GetComponent<Health>().MaxHealth = waveDraft.Health;
+                creep.GetComponent<Health>().OnDead += () =>
+                {
+                    player.GetComponent<Wallet>().Claim(creep.GetComponent<Wallet>().Treasure);
+                };
+
                 creep.GetComponent<MoveOnPath>().OnPathEndReached += () =>
                 {
                     creep.gameObject.GetComponent<PathView>().Path = path;
                     creep.transform.position = GetInitalPosition(waveDraft.Spread);
                 };
+                creep.GetOrAddComponent<Wallet>().Treasure = waveDraft.Tresure;
                 creep.transform.position = GetInitalPosition(waveDraft.Spread);
                 creep.transform.SetParent(transform);
                 wave.AddCreep(creep);

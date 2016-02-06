@@ -12,8 +12,9 @@ namespace Game
         public float Size { get; private set; }
         public float Spread { get; private set; }
         public float CreepDistance { get; private set; }
+        public Treasure Tresure { get; private set; }
 
-        public WaveInfo(int waveCount, int health, float speed, float size, float spread, float creepDistance)
+        public WaveInfo(int waveCount, int health, float speed, float size, float spread, float creepDistance, Treasure treasure)
         {
             WaveCount = waveCount;
             Health = health;
@@ -21,6 +22,7 @@ namespace Game
             Size = size;
             Spread = spread;
             CreepDistance = creepDistance;
+            Tresure = treasure;
         }
 
         [Serializable]
@@ -58,6 +60,7 @@ namespace Game
                 // Size scale
                 var size = 1f;
                 var health = (float) draft.Health;
+                var treasure = draft.Treasure;
 
                 foreach (var creepType in draft.Traits)
                 {
@@ -91,7 +94,7 @@ namespace Game
 
                 var spread = (float)waveCount / settings.WaveCount;
 
-                list.Add(new WaveInfo(waveCount, (int) health, speed, size, spread, creepDistance));
+                list.Add(new WaveInfo(waveCount, (int) health, speed, size, spread, creepDistance, treasure));
             }
             return list;
         }
