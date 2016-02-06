@@ -39,6 +39,7 @@ namespace Game
                 creep.GetComponent<Health>().OnDead += () =>
                 {
                     player.GetComponent<Wallet>().Claim(creep.GetComponent<Wallet>().Treasure);
+                    Destroy(creep.gameObject);
                 };
 
                 creep.GetComponent<MoveOnPath>().OnPathEndReached += () =>
