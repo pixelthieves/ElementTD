@@ -35,7 +35,6 @@ namespace Game
 
                 creep.GetComponent<PathView>().Path = GetComponent<Path>();
                 creep.GetComponent<Health>().MaxHealth = waveDraft.Health;
-                creep.GetComponent<Health>().CurrentHealth = waveDraft.Health;
                 creep.GetComponent<Health>().OnDead += () =>
                 {
                     player.GetComponent<Wallet>().Claim(creep.GetComponent<Wallet>().Treasure);

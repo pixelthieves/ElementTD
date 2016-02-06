@@ -27,6 +27,11 @@ namespace Game
             }
         }
 
+        private void Start()
+        {
+            CurrentHealth = MaxHealth;
+        }
+
         public event Action OnDead;
     }
 }
