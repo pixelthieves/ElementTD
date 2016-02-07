@@ -56,7 +56,6 @@ namespace Game
             pathData = pathData.Select(p => p.Select(v => v + Start + Vector3.forward).ToList()).ToList();
 
             var waveSpawnerGo = Instantiate(WaveSpawner);
-            waveSpawnerGo.name = "Creeps";
             waveSpawnerGo.transform.SetParent(transform);
             var path = waveSpawnerGo.GetComponent<Path>();
             path.Init(pathData);
