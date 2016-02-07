@@ -20,16 +20,20 @@ namespace Ui
         public RectTransform TowerGrid;
 
         private GameObject player;
+        private GameObject wave;
 
         private void Start()
         {
             player = GameObject.FindGameObjectWithTag("Player");
+            wave = GameObject.FindGameObjectWithTag("Wave");
         }
 
         public void Update()
         {
             LivesText.text = player.GetComponent<Health>().CurrentHealth.ToString("0");
             GoldText.text = player.GetComponent<Wallet>().Gold.ToString("0");
+            WaveText.text = wave.GetComponent<WaveSpawner>().Time.ToString("0");
+            InterestText.text = player.GetComponent<Economy>().Time.ToString("0");
         }
     }
 }

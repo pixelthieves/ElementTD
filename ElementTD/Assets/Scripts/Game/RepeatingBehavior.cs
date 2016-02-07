@@ -9,9 +9,11 @@ namespace Game
         public int Delay;
         public int Interval;
 
+        private SuperTimer timer;
+
         private void Awake()
         {
-            var timer = transform.GetOrAddComponent<SuperTimer>();
+            timer = transform.GetOrAddComponent<SuperTimer>();
             timer.Interval = Delay;
             timer.AutoReset = true;
             timer.OnElapsed += () =>
@@ -30,6 +32,11 @@ namespace Game
             //                timer.Interval = Interval;
             //            };
             //            timer.Start();
+        }
+
+        public float Time
+        {
+            get { return timer.Time; }
         }
 
         protected abstract void Action();
