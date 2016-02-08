@@ -14,7 +14,7 @@ namespace Game
         protected override void Action()
         {
             var wallet = GetComponent<Wallet>();
-            var goldToAdd = (int)(wallet.Gold * (1 + Interest));
+            var goldToAdd = (int)(wallet.Gold * Interest);
             if (OnGoldEarned != null) OnGoldEarned(goldToAdd);
             wallet.Gold += goldToAdd;
         }
