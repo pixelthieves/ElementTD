@@ -44,8 +44,10 @@ namespace Game
                 {
                     creep.gameObject.GetComponent<PathView>().Path = GetComponent<Path>();
                     creep.transform.position = GetInitalPosition(waveDraft.Spread);
+                    player.GetComponent<Health>().CurrentHealth -= creep.GetComponent<Damage>().Value;
                 };
                 creep.GetOrAddComponent<Wallet>().Treasure = waveDraft.Tresure;
+                creep.GetOrAddComponent<Damage>().Value = waveDraft.Damage;
                 creep.transform.position = GetInitalPosition(waveDraft.Spread);
                 creep.transform.SetParent(transform);
                 wave.AddCreep(creep);

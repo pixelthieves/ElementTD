@@ -9,16 +9,18 @@ namespace Game
         public int WaveCount { get; private set; }
         public int Health { get; private set; }
         public float Speed { get; private set; }
+        public float Damage { get; private set; }
         public float Size { get; private set; }
         public float Spread { get; private set; }
         public float CreepDistance { get; private set; }
         public Treasure Tresure { get; private set; }
 
-        public WaveInfo(int waveCount, int health, float speed, float size, float spread, float creepDistance, Treasure treasure)
+        public WaveInfo(int waveCount, int health, float speed, float damage, float size, float spread, float creepDistance, Treasure treasure)
         {
             WaveCount = waveCount;
             Health = health;
             Speed = speed;
+            Damage = damage;
             Size = size;
             Spread = spread;
             CreepDistance = creepDistance;
@@ -53,14 +55,14 @@ namespace Game
             foreach (var draft in drafts)
             {
                 var waveCount = settings.WaveCount;
-                var swarm = settings.SwarmMultiplayer;
+                var health = (float)draft.Health;
                 var speed = settings.Speed;
-                var creepDistance = settings.CreepDistance;
-
-                // Size scale
+                var damage = 1f;
                 var size = 1f;
-                var health = (float) draft.Health;
+                var creepDistance = settings.CreepDistance;
                 var treasure = draft.Treasure;
+
+                var swarm = settings.SwarmMultiplayer;
 
                 foreach (var creepType in draft.Traits)
                 {
@@ -86,6 +88,7 @@ namespace Game
                             // TODO apply health modifier
                             break;
                         case CreepTraits.Boss:
+                            damage *= 5;
                             size *= 3f;
                             waveCount /= settings.WaveCount;
                             break;
@@ -94,7 +97,7 @@ namespace Game
 
                 var spread = (float)waveCount / settings.WaveCount;
 
-                list.Add(new WaveInfo(waveCount, (int) health, speed, size, spread, creepDistance, treasure));
+                list.Add(new WaveInfo(waveCount, (int) health, speed, damage, size, spread, creepDistance, treasure));
             }
             return list;
         }
